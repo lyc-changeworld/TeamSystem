@@ -17,21 +17,22 @@ import cn.bmob.v3.listener.FindListener;
  * Created by achuan on 16-11-3.
  * 功能：Presenter操作者的具体方法逻辑实现
  */
-public class SigninPresenter extends RxPresenter<SigninCourseContract.View>
+public class SigninCoursePresenter extends RxPresenter<SigninCourseContract.View>
         implements SigninCourseContract.Presenter {
 
 
     //接口实现网络端全部课程数据的加载
     @Override
     public void getCourseData() {
+        mView.showLoading("正在加载...");
         BmobHelper.getInstance().courseQueryAll().findObjects(new FindListener<Course>() {
             @Override
             public void done(List<Course> list, BmobException e) {
+                mView.hideLoading();
                 if(e==null){
                     mView.showContent(list);
                 }else{
                     mView.showError("数据加载失败ヽ(≧Д≦)ノ");
-                    //LogUtil.d("lyc-bmob",e.getMessage());
                 }
             }
         });

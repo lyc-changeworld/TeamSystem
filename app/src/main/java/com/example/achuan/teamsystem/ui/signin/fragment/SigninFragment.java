@@ -16,7 +16,7 @@ import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.app.Constant;
 import com.example.achuan.teamsystem.base.MvpFragment;
 import com.example.achuan.teamsystem.model.bean.Course;
-import com.example.achuan.teamsystem.presenter.SigninPresenter;
+import com.example.achuan.teamsystem.presenter.SigninCoursePresenter;
 import com.example.achuan.teamsystem.presenter.contract.SigninCourseContract;
 import com.example.achuan.teamsystem.ui.signin.activity.SigninDetailActivity;
 import com.example.achuan.teamsystem.ui.signin.adapter.SigninCourseAdapter;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by achuan on 16-11-3.
  * 功能：课程界面（碎片）
  */
-public class SigninFragment extends MvpFragment<SigninPresenter> implements SigninCourseContract.View {
+public class SigninFragment extends MvpFragment<SigninCoursePresenter> implements SigninCourseContract.View {
 
     @BindView(R.id.id_recyclerView)
     RecyclerView mIdRecyclerView;
@@ -54,8 +54,8 @@ public class SigninFragment extends MvpFragment<SigninPresenter> implements Sign
 
 
     @Override
-    protected SigninPresenter createPresenter() {
-        return new SigninPresenter();
+    protected SigninCoursePresenter createPresenter() {
+        return new SigninCoursePresenter();
     }
 
     @Override
@@ -77,11 +77,6 @@ public class SigninFragment extends MvpFragment<SigninPresenter> implements Sign
         //为列表控件配置适配器
         mIdRecyclerView.setAdapter(mCourseAdapter);
 
-
-        //第一次打开该界面,需要创建加载进度框
-        DialogUtil.createProgressDialog(mContext,null,
-                getString(R.string.Is_loading),
-                false,false);//对话框无法被取消
         //初始化获取网络数据
         mPresenter.getCourseData();
 
@@ -183,9 +178,21 @@ public class SigninFragment extends MvpFragment<SigninPresenter> implements Sign
         }
     }
 
-    //根据关键字进行数据查询
+    /*//根据关键字进行数据查询
     public void doSearch(String query) {
         mPresenter.getSearchCourseData(query);
+    }*/
+
+    @Override
+    public void showLoading(String message) {
+        DialogUtil.createProgressDialog(mContext,"", message,true,false);
+    }
+
+    @Override
+    public void hideLoading() {
+        if(DialogUtil.isProgressDialogShowing()){
+            DialogUtil.closeProgressDialog();
+        }
     }
 
     @Override

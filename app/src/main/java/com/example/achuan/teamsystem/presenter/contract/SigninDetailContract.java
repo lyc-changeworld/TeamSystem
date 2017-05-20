@@ -11,16 +11,19 @@ import com.example.achuan.teamsystem.base.BaseView;
 public interface SigninDetailContract {
     //view层接口方法
     interface View extends BaseView {
-        //显示列表内容的方法
-        //void showContent(List<TeacherBean> mList);
+        //显示和隐藏进度条
+        void showLoading(String message);
+        void hideLoading();
+        //显示签到记录查询结果
+        void showCheckResult();
         //显示签到成功
-        void showSigninSuccess(String message);
+        void showSigninSuccess();
     }
     //presenter层接口方法
     interface  Presenter extends BasePresenter<View> {
-        //获取课程对应的任课老师的数据
-        //void getTeacherData();
-        //签到处理(学号，课程号)
+        //对签到记录进行查询
+        void checkSignInRecord(String Sno, String Cno);
+        //签到处理(学号，课程号),存储到后台服务器
         void signinDeal(String Sno, String Cno);
     }
 }

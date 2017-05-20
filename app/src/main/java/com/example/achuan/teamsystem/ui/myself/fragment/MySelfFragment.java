@@ -1,4 +1,4 @@
-package com.example.achuan.teamsystem.ui.my.fragment;
+package com.example.achuan.teamsystem.ui.myself.fragment;
 
 
 import android.app.Dialog;
@@ -276,7 +276,9 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
 
     @Override
     public void hideLoading() {
-        DialogUtil.closeProgressDialog();
+        if(DialogUtil.isProgressDialogShowing()){
+            DialogUtil.closeProgressDialog();
+        }
     }
 
     @Override

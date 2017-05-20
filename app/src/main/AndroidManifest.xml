@@ -84,6 +84,9 @@
         <!--签到界面-->
         <activity android:name=".ui.signin.activity.SigninDetailActivity"></activity>
 
+        <!--注册service-->
+        <service android:name=".service.BleService"></service>
+
     </application>
 
 </manifest>

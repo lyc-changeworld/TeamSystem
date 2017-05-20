@@ -14,6 +14,9 @@ import java.util.List;
 public interface SigninCourseContract {
     //view层接口方法
     interface View extends BaseView {
+        //显示和隐藏进度条
+        void showLoading(String message);
+        void hideLoading();
         //显示列表内容的方法
         void showContent(List<Course> mList);
     }

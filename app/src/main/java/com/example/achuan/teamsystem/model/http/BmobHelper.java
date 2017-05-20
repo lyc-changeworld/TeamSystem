@@ -4,9 +4,9 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.example.achuan.teamsystem.app.App;
+import com.example.achuan.teamsystem.model.bean.CheckInRecord;
 import com.example.achuan.teamsystem.model.bean.Course;
 import com.example.achuan.teamsystem.model.bean.MyUser;
-import com.example.achuan.teamsystem.model.bean.CheckInRecord;
 import com.example.achuan.teamsystem.model.bean.Student;
 
 import java.io.File;
@@ -197,22 +197,7 @@ public class BmobHelper {
     }
 
     /**************************3-签到相关************************/
-    /***.　1查询全部的教师数据***/
-    /*public BmobQuery<TeacherBean> teacherBmobQueryAll(){
-        final BmobQuery<TeacherBean> query = new BmobQuery<TeacherBean>();
-        // 根据Semester字段升序显示数据（由小到大）
-        //query.order("Semester");
-        *//*query.findObjects(new FindListener<BmobUser>() {
-            @Override
-            public void done(List<BmobUser> object,BmobException e) {
-                if(e==null){
-                }else{
-                }
-            }
-        });*//*
-        return query;
-    }*/
-    /***. 2添加数据到签到记录表中***/
+    /*. 1添加数据到签到记录表中***/
     public CheckInRecord signinDetailSave(String Sno, String Cno){
         CheckInRecord signinRecord=new CheckInRecord();
         signinRecord.setSno(Sno);
@@ -227,6 +212,36 @@ public class BmobHelper {
         });*/
         return signinRecord;
     }
+
+    /*. 2-查询签到记录表中满足关系的数据***/
+    public BmobQuery<CheckInRecord> checkSignInRecord(String Sno, String Cno){
+        BmobQuery<CheckInRecord> query = new BmobQuery<CheckInRecord>();
+        query.addWhereEqualTo("Sno",Sno);
+        query.addWhereEqualTo("Cno",Cno);
+        //返回50条数据，如果不加上这条语句，默认返回10条数据
+        //query.setLimit(50);
+        //执行查询方法
+        /*query.findObjects(new FindListener<GameScore>() {
+            @Override
+            public void done(List<GameScore> object, BmobException e) {
+                if(e==null){
+                    toast("查询成功：共"+object.size()+"条数据。");
+                    for (GameScore gameScore : object) {
+                        //获得playerName的信息
+                        gameScore.getPlayerName();
+                        //获得数据的objectId信息
+                        gameScore.getObjectId();
+                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+                        gameScore.getCreatedAt();
+                    }
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });*/
+        return query;
+    }
+
 
     /**************************4-学生信息相关************************/
     /***. 1通过手机号来查询对应的学生数据是否存在***/

@@ -1,10 +1,13 @@
 package com.example.achuan.teamsystem.ui.main.activity;
 
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +15,7 @@ import android.view.MenuItem;
 import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.app.Constant;
 import com.example.achuan.teamsystem.base.SimpleActivity;
-import com.example.achuan.teamsystem.ui.my.fragment.MySelfFragment;
+import com.example.achuan.teamsystem.ui.myself.fragment.MySelfFragment;
 import com.example.achuan.teamsystem.ui.signin.fragment.SigninFragment;
 import com.example.achuan.teamsystem.util.SharedPreferenceUtil;
 import com.example.achuan.teamsystem.util.SystemUtil;
@@ -23,6 +26,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends SimpleActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG="MainActivity";
+
+    public static final int PERMISSIONS_REQUEST_FINE_LOCATION = 1;//申请权限的请求码
 
     //需要装载到主活动中的Fragment的引用变量
     SigninFragment mSigninFragment;
@@ -50,6 +55,8 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
 
     @Override
     protected void initEventAndData() {
+        /*运行时申请权限*/
+        requestPermission();
         /********************检测并打开网络****************/
         //SystemUtil.checkAndShowNetSettingDialog(this);
         contentViewId = R.id.fl_main_content;//获取内容容器的ID号
@@ -189,6 +196,36 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
             default:break;
         }
         return mSigninFragment;
+    }
+
+    /**
+     * 1-运行时申请权限
+     */
+    private void requestPermission() {
+        if (ActivityCompat.checkSelfPermission(this, //Context
+                Manifest.permission.ACCESS_FINE_LOCATION)//具体的权限名
+                != PackageManager.PERMISSION_GRANTED) {//用来比较权限
+            // No explanation needed　申请权限.
+            ActivityCompat.requestPermissions(this,//Activity实例
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},//数组,存放权限名
+                    PERMISSIONS_REQUEST_FINE_LOCATION);//请求码
+        }
+    }
+
+    /*用户对申请权限进行操作后的回调方法*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_FINE_LOCATION:
+                //授权结果通过
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    //授予了该权限
+                } else {
+                    //拒绝授予该权限
+                }
+            default:break;
+        }
     }
 
     @Override

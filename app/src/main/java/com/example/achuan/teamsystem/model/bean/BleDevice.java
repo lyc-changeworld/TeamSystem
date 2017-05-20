@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 /**
  * Created by achuan on 17-4-06.
- * 功能：
+ * 功能：低功耗蓝牙设备的实体类
  */
 
 public class BleDevice {
@@ -136,7 +136,7 @@ public class BleDevice {
 			}
 		};
 		mTimer=new Timer();
-		mTimer.scheduleAtFixedRate(mTimerTask,0,100);
+		mTimer.scheduleAtFixedRate(mTimerTask,0,100);//每100ms触发一次run函数
 	}
 
 
