@@ -1,4 +1,4 @@
-package com.example.achuan.teamsystem.ui.main.activity;
+package com.example.achuan.teamsystem.ui.user.main.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -68,40 +68,50 @@ public class RegisterActivity extends SimpleActivity {
         /**对手机号验证界面传递过来的手机号进行判断处理*/
         //获取到手机号码验证界面传递过来的“手机号”
         String phoneNumber=getIntent().getStringExtra(Constant.PHONE);
-        //将用户名输入框设置好，然后禁止进行编辑修改
-        mEtUsername.setText(phoneNumber);
-        mEtUsername.setKeyListener(null);
-        mEtUsername.setFocusable(false);
-        mEtUsername.setFocusableInTouchMode(false);
-        /*接着对手机号进行是否已经存在的判断*/
-        BmobHelper.getInstance().userQuery(phoneNumber).findObjects(new FindListener<MyUser>() {
-            @Override
-            public void done(List<MyUser> list, BmobException e) {
-                if (e == null) {
-                    if (list.size() > 0) {
-                        //存在,提示该用户已经存在
+
+        if(phoneNumber!=null){
+            //将用户名输入框设置好，然后禁止进行编辑修改
+            mEtUsername.setText(phoneNumber);
+            mEtUsername.setKeyListener(null);
+            mEtUsername.setFocusable(false);
+            mEtUsername.setFocusableInTouchMode(false);
+            /*接着对手机号进行是否已经存在的判断*/
+            BmobHelper.getInstance().userQuery(phoneNumber).findObjects(new FindListener<MyUser>() {
+                @Override
+                public void done(List<MyUser> list, BmobException e) {
+                    if (e == null) {
+                        if (list.size() > 0) {
+                            //存在,提示该用户已经存在
+                            Toast.makeText(
+                                    RegisterActivity.this,//在该activity显示
+                                    getString(R.string.Phone_already_exists),//显示的内容
+                                    Toast.LENGTH_LONG).show();//显示的格式
+                            //屏蔽编辑框
+                            mEtPassword.setKeyListener(null);
+                            mEtPassword.setFocusable(false);
+                            mEtPassword.setFocusableInTouchMode(false);
+                            mEtConfirmPassword.setKeyListener(null);
+                            mEtConfirmPassword.setFocusable(false);
+                            mEtConfirmPassword.setFocusableInTouchMode(false);
+                            //
+                            mBtnRegister.setText(getString(R.string.Phone_already_exists));
+                        }
+                    }else {
                         Toast.makeText(
                                 RegisterActivity.this,//在该activity显示
-                                getString(R.string.Phone_already_exists),//显示的内容
+                                "查询账号信息失败:" + e.getMessage(),//显示的内容
                                 Toast.LENGTH_LONG).show();//显示的格式
-                        //屏蔽编辑框
-                        mEtPassword.setKeyListener(null);
-                        mEtPassword.setFocusable(false);
-                        mEtPassword.setFocusableInTouchMode(false);
-                        mEtConfirmPassword.setKeyListener(null);
-                        mEtConfirmPassword.setFocusable(false);
-                        mEtConfirmPassword.setFocusableInTouchMode(false);
-                        //
-                        mBtnRegister.setText(getString(R.string.Phone_already_exists));
                     }
-                }else {
-                    Toast.makeText(
-                            RegisterActivity.this,//在该activity显示
-                            "查询账号信息失败:" + e.getMessage(),//显示的内容
-                            Toast.LENGTH_LONG).show();//显示的格式
                 }
-            }
-        });
+            });
+        }else {
+            Toast.makeText(
+                    RegisterActivity.this,//在该activity显示
+                    "手机号为空...",//显示的内容
+                    Toast.LENGTH_LONG).show();//显示的格式
+        }
+
+
 
         /***为Edit输入框添加输入监听类,实现合理的效果***/
         //对只有在用户名和密码的输入都不为空的情况下，button按钮才显示有效，

@@ -1,6 +1,7 @@
-package com.example.achuan.teamsystem.ui.signin.fragment;
+package com.example.achuan.teamsystem.ui.user.signin.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import com.example.achuan.teamsystem.base.MvpFragment;
 import com.example.achuan.teamsystem.model.bean.Course;
 import com.example.achuan.teamsystem.presenter.SigninCoursePresenter;
 import com.example.achuan.teamsystem.presenter.contract.SigninCourseContract;
-import com.example.achuan.teamsystem.ui.signin.activity.SigninDetailActivity;
-import com.example.achuan.teamsystem.ui.signin.adapter.SigninCourseAdapter;
+import com.example.achuan.teamsystem.ui.admin.ble.activity.DeviceScanActivity;
+import com.example.achuan.teamsystem.ui.admin.main.activity.AdminMainActivity;
+import com.example.achuan.teamsystem.ui.user.main.activity.UserMainActivity;
+import com.example.achuan.teamsystem.ui.user.signin.activity.SigninDetailActivity;
+import com.example.achuan.teamsystem.ui.user.signin.adapter.SigninCourseAdapter;
 import com.example.achuan.teamsystem.util.DialogUtil;
 import com.example.achuan.teamsystem.util.SnackbarUtil;
 import com.example.achuan.teamsystem.widget.SideBar;
@@ -37,6 +41,8 @@ import butterknife.ButterKnife;
  */
 public class SigninFragment extends MvpFragment<SigninCoursePresenter> implements SigninCourseContract.View {
 
+    private final static String TAG="SigninFragment";
+
     @BindView(R.id.id_recyclerView)
     RecyclerView mIdRecyclerView;
     @BindView(R.id.swipe_refresh)
@@ -45,7 +51,6 @@ public class SigninFragment extends MvpFragment<SigninCoursePresenter> implement
     SideBar mSideBar;
     @BindView(R.id.tv_hint)
     TextView mTvHint;
-
 
     Context mContext;//上下文变量
     private SigninCourseAdapter mCourseAdapter;//列表适配器
@@ -144,19 +149,25 @@ public class SigninFragment extends MvpFragment<SigninCoursePresenter> implement
             }
         });
 
-
         /***设置item的点击监听事件***/
         mCourseAdapter.setOnItemClickListener(new SigninCourseAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, Course course) {
-                //跳转到签到界面
-                Intent intent=new Intent(mContext, SigninDetailActivity.class);
+                Intent intent = null;
+                Activity activity = (Activity)mContext;
+                //根据不同的用户权限进行跳转
+                if(activity instanceof AdminMainActivity){
+                    //跳转到蓝牙设备列表界面
+                    intent=new Intent(mContext, DeviceScanActivity.class);
+                }else if(activity instanceof UserMainActivity){
+                    //跳转到签到界面
+                    intent=new Intent(mContext, SigninDetailActivity.class);
+                }
                 intent.putExtra(Constant.TITLE,course.getCname());
                 intent.putExtra(Constant.CNO,course.getCno());//课程号
                 mContext.startActivity(intent);
             }
         });
-
     }
 
     //将后台加载好的数据进行适配显示

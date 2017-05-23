@@ -32,6 +32,8 @@ public class Constant {
     public static final String CURRENT_ITEM = "current_item";
     //当前环信账号的用户名
     public static final String KEY_USERNAME = "username";
+    //当前用户的身份权限
+    public static final String ADMIN_RIGHT = "admin_right";
 
 
     //=================环信即时通讯相关====================
@@ -57,6 +59,7 @@ public class Constant {
 
 
     //=================蓝牙相关====================
+    public static final String DEVICE="device";
     public static final int DISTANCE=10;//允许可以进行签到的距离
     //目标蓝牙的MAC地址
     public static final String TARGET_BLE_MAC="20:91:48:31:D0:EB";

@@ -23,7 +23,7 @@ public class DateUtil {
     public static boolean IsToday(String day) throws ParseException {
 
         Calendar pre = Calendar.getInstance();
-        Date predate = new Date(System.currentTimeMillis());
+        Date predate = new Date(System.currentTimeMillis());//当天日期
         pre.setTime(predate);
 
         Calendar cal = Calendar.getInstance();
@@ -49,5 +49,32 @@ public class DateUtil {
         return DateLocal.get();
     }
 
+    /**
+     * 获取当天日期的时间范围
+     * 参数介绍：isStart 为true时,得到今天凌晨0点时间;为false时,得到今天晚上24点时间
+     * */
+    public static Date getTodayRange(boolean isStart){
+        //先获取当前时间
+        long time=System.currentTimeMillis();
+        //配置时间格式(年-月-日)
+        SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //变成日期实例
+        Date predate=new Date(time);
+        //转化成字符串形式
+        String today=sdf1.format(predate);//先拿到：年-月-日
+        String start=today+" 00:00:00";
+        String end=today+" 23:59:59";
+        try {
+            if(isStart){
+                return sdf2.parse(start);
+            }else {
+                return sdf2.parse(end);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

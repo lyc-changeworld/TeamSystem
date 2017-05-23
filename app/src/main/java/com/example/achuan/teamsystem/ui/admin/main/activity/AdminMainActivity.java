@@ -1,4 +1,4 @@
-package com.example.achuan.teamsystem.ui.main.activity;
+package com.example.achuan.teamsystem.ui.admin.main.activity;
 
 
 import android.Manifest;
@@ -15,17 +15,17 @@ import android.view.MenuItem;
 import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.app.Constant;
 import com.example.achuan.teamsystem.base.SimpleActivity;
-import com.example.achuan.teamsystem.ui.myself.fragment.MySelfFragment;
-import com.example.achuan.teamsystem.ui.signin.fragment.SigninFragment;
+import com.example.achuan.teamsystem.ui.user.myself.fragment.MySelfFragment;
+import com.example.achuan.teamsystem.ui.user.signin.fragment.SigninFragment;
 import com.example.achuan.teamsystem.util.SharedPreferenceUtil;
 import com.example.achuan.teamsystem.util.SystemUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends SimpleActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class AdminMainActivity extends SimpleActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    public static final String TAG="MainActivity";
+    public static final String TAG="UserMainActivity";
 
     public static final int PERMISSIONS_REQUEST_FINE_LOCATION = 1;//申请权限的请求码
 
@@ -50,7 +50,7 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_main;
+        return R.layout.activity_main_admin;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
 
         /***1-初始化底部导航栏设置***/
         //初始化第一次显示的item为设置界面
-        mLastMenuItem = mBtmNav.getMenu().findItem(R.id.bottom_0);
+        mLastMenuItem = mBtmNav.getMenu().findItem(R.id.btm_0);
         mLastMenuItem.setChecked(true);
         //添加点击监听事件
         mBtmNav.setOnNavigationItemSelectedListener(this);
@@ -81,7 +81,6 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
         //并将第一界面碎片添加到布局容器中
         //replaceFragment(contentViewId, getTargetFragment(showFragment));
         SharedPreferenceUtil.setCurrentItem(showFragment);
-
     }
 
     @Override
@@ -134,7 +133,7 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.bottom_0:
+            case R.id.btm_0:
                 showFragment = Constant.TYPE_NEWS;
                 //第一次加载显示时,才创建碎片对象,并添加到内容容器中
                 /*if (mNewsMainFragment == null) {
@@ -156,7 +155,7 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
                     addFragment(contentViewId, mExploreMainFragment);
                 }
                 break;*/
-            case R.id.bottom_3:
+            case R.id.btm_2:
                 showFragment = Constant.TYPE_MYSELF;
                 if (mMySelfFragment == null) {
                     mMySelfFragment = new MySelfFragment();
@@ -209,22 +208,6 @@ public class MainActivity extends SimpleActivity implements BottomNavigationView
             ActivityCompat.requestPermissions(this,//Activity实例
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},//数组,存放权限名
                     PERMISSIONS_REQUEST_FINE_LOCATION);//请求码
-        }
-    }
-
-    /*用户对申请权限进行操作后的回调方法*/
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_FINE_LOCATION:
-                //授权结果通过
-                if (grantResults.length > 0 && grantResults[0] ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    //授予了该权限
-                } else {
-                    //拒绝授予该权限
-                }
-            default:break;
         }
     }
 

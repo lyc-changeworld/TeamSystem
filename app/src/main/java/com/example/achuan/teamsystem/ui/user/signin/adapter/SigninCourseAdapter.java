@@ -1,4 +1,4 @@
-package com.example.achuan.teamsystem.ui.signin.adapter;
+package com.example.achuan.teamsystem.ui.user.signin.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

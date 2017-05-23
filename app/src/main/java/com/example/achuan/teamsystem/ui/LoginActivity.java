@@ -1,4 +1,4 @@
-package com.example.achuan.teamsystem.ui.main.activity;
+package com.example.achuan.teamsystem.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,11 +14,14 @@ import android.widget.Toast;
 
 import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.base.SimpleActivity;
+import com.example.achuan.teamsystem.model.bean.Admin;
 import com.example.achuan.teamsystem.model.db.ContactUser;
 import com.example.achuan.teamsystem.model.db.LitePalDBHelper;
 import com.example.achuan.teamsystem.model.http.BmobHelper;
 import com.example.achuan.teamsystem.model.http.EaseMobHelper;
 import com.example.achuan.teamsystem.model.http.MobHelper;
+import com.example.achuan.teamsystem.ui.admin.main.activity.AdminMainActivity;
+import com.example.achuan.teamsystem.ui.user.main.activity.UserMainActivity;
 import com.example.achuan.teamsystem.util.DialogUtil;
 import com.example.achuan.teamsystem.util.LogUtil;
 import com.example.achuan.teamsystem.util.SharedPreferenceUtil;
@@ -42,6 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
 
@@ -169,39 +173,74 @@ public class LoginActivity extends SimpleActivity {
                                     @Override
                                     public void done(BmobUser bmobUser, BmobException e) {
                                         if (e == null) {
-                                            //LogUtil.d(TAG,"登录成功");
-                                            //注意:这里要回到主线程中进行UI更新
-                                            runOnUiThread(new Runnable() {
+                                            /**进行普通用户和管理员的身份识别，然后跳转到不同功能界面*/
+                                            BmobHelper.getInstance().adminQuery(userName).findObjects(new FindListener<Admin>() {
                                                 @Override
-                                                public void run() {
-                                                    //关闭加载窗口
-                                                    if (!LoginActivity.this.isFinishing() && DialogUtil.isProgressDialogShowing()) {
-                                                        DialogUtil.closeProgressDialog();
+                                                public void done(final List<Admin> list, BmobException e) {
+                                                    if(e==null){
+                                                        //注意:这里要回到主线程中进行UI更新
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                //关闭加载窗口
+                                                                if (!LoginActivity.this.isFinishing() && DialogUtil.isProgressDialogShowing()) {
+                                                                    DialogUtil.closeProgressDialog();
+                                                                }
+                                                                /*-登录成功后更新当前用户信息-*/
+                                                                SharedPreferenceUtil.setCurrentUserName(userName);
+                                                                /*环信初始化加载*/
+                                                                //第一次登录或者之前logout后再登录,加载所有本地群和会话
+                                                                EMClient.getInstance().groupManager().loadAllGroups();
+                                                                EMClient.getInstance().chatManager().loadAllConversations();
+                                                                //加载好友信息并存储到本地
+                                                                //getFriends();
+                                                                /***---切换数据库文件到当前对应的用户---***/
+                                                                /*创建一个名为xxx的数据库,而它的所有配置都会直接使用litepal.xml文件中配置的内容*/
+                                                                LitePalDB litePalDB= LitePalDB.fromDefault(userName+"_TEAM");
+                                                                LitePal.use(litePalDB);
+                                                                //切换回litepal.xml中指定的默认数据库
+                                                                //LitePal.useDefault();
+                                                                if(list.size()>0){
+                                                                    //说明该账户为管理员
+                                                                    SharedPreferenceUtil.setAdmin(true);
+                                                                    startActivity(new Intent(LoginActivity.this, AdminMainActivity.class));
+                                                                    //提示登录成功
+                                                                    Toast.makeText(getApplicationContext(),
+                                                                            "管理员账号"+getString(R.string.Login_successfully),
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                }else {
+                                                                    SharedPreferenceUtil.setAdmin(false);
+                                                                    startActivity(new Intent(LoginActivity.this, UserMainActivity.class));
+                                                                    //提示登录成功
+                                                                    Toast.makeText(getApplicationContext(),
+                                                                            getString(R.string.Login_successfully),
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                }
+                                                                finish();
+                                                            }
+                                                        });
+                                                    }else {
+                                                        LogUtil.d(TAG,e.getMessage());
+                                                        Toast.makeText(getApplicationContext(),
+                                                                "身份验证失败,请检查网络是否通畅...",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        //退出Bmob登录
+                                                        BmobHelper.getInstance().userLogOut();
+                                                        //退出环信登录
+                                                        EaseMobHelper.getInstance().logout(false, new EMCallBack() {
+                                                            @Override
+                                                            public void onSuccess() {
+                                                            }
+                                                            @Override
+                                                            public void onError(int code, String error) {
+
+                                                            }
+                                                            @Override
+                                                            public void onProgress(int progress, String status) {
+
+                                                            }
+                                                        });
                                                     }
-                                                    /*环信初始化加载*/
-                                                    //第一次登录或者之前logout后再登录,加载所有本地群和会话
-                                                    EMClient.getInstance().groupManager().loadAllGroups();
-                                                    EMClient.getInstance().chatManager().loadAllConversations();
-                                                    //加载好友信息并存储到本地
-                                                    //getFriends();
-
-                                                    /*---登录成功后更新当前用户信息---*/
-                                                    SharedPreferenceUtil.setCurrentUserName(userName);
-                                                    /***---切换数据库文件到当前对应的用户---***/
-                                                    /*创建一个名为xxx的数据库,而它的所有配置都会直接使用litepal.xml文件中配置的内容*/
-                                                    LitePalDB litePalDB= LitePalDB.fromDefault(userName+"_TEAM");
-                                                    LitePal.use(litePalDB);
-                                                    //切换回litepal.xml中指定的默认数据库
-                                                    //LitePal.useDefault();
-
-                                                    //提示登录成功
-                                                    Toast.makeText(getApplicationContext(),
-                                                            getString(R.string.Login_successfully),
-                                                            Toast.LENGTH_SHORT).show();
-                                                    //跳转到主页面
-                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
                                                 }
                                             });
                                         }else {

@@ -4,10 +4,13 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.example.achuan.teamsystem.app.App;
+import com.example.achuan.teamsystem.model.bean.Admin;
+import com.example.achuan.teamsystem.model.bean.Card;
 import com.example.achuan.teamsystem.model.bean.CheckInRecord;
 import com.example.achuan.teamsystem.model.bean.Course;
 import com.example.achuan.teamsystem.model.bean.MyUser;
 import com.example.achuan.teamsystem.model.bean.Student;
+import com.example.achuan.teamsystem.util.DateUtil;
 
 import java.io.File;
 
@@ -16,6 +19,7 @@ import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -213,11 +217,17 @@ public class BmobHelper {
         return signinRecord;
     }
 
-    /*. 2-查询签到记录表中满足关系的数据***/
+    /*. 2-查询签到记录表中满足关系的数据(进行时间筛选)***/
+    /*参考文档：http://blog.csdn.net/lkc1989/article/details/50479255*/
     public BmobQuery<CheckInRecord> checkSignInRecord(String Sno, String Cno){
         BmobQuery<CheckInRecord> query = new BmobQuery<CheckInRecord>();
         query.addWhereEqualTo("Sno",Sno);
         query.addWhereEqualTo("Cno",Cno);
+        //下面利用时间段来查询数据
+        //指定日期之后
+        query.addWhereGreaterThan("createdAt",new BmobDate(DateUtil.getTodayRange(true)));
+        //指定日期之前
+        query.addWhereLessThan("createdAt",new BmobDate(DateUtil.getTodayRange(false)));
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         //query.setLimit(50);
         //执行查询方法
@@ -225,15 +235,6 @@ public class BmobHelper {
             @Override
             public void done(List<GameScore> object, BmobException e) {
                 if(e==null){
-                    toast("查询成功：共"+object.size()+"条数据。");
-                    for (GameScore gameScore : object) {
-                        //获得playerName的信息
-                        gameScore.getPlayerName();
-                        //获得数据的objectId信息
-                        gameScore.getObjectId();
-                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-                        gameScore.getCreatedAt();
-                    }
                 }else{
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                 }
@@ -242,8 +243,22 @@ public class BmobHelper {
         return query;
     }
 
+    /**************************4-管理员相关************************/
+    public BmobQuery<Admin> adminQuery(String id){
+        BmobQuery<Admin> query = new BmobQuery<Admin>();
+        query.addWhereEqualTo("id",id);
+        return query;
+    }
 
-    /**************************4-学生信息相关************************/
+    /**************************5-刷卡签到相关************************/
+    public BmobQuery<Card> cardQuery(String Cnum){
+        BmobQuery<Card> query = new BmobQuery<Card>();
+        query.addWhereEqualTo("Cnum",Cnum);
+        return query;
+    }
+
+
+    /**************************-学生信息相关************************/
     /***. 1通过手机号来查询对应的学生数据是否存在***/
     public BmobQuery<Student> studentQuery(String mobilePhoneNumber){
         final BmobQuery<Student> query = new BmobQuery<Student>();
@@ -292,7 +307,7 @@ public class BmobHelper {
         return studentBean;
     }*/
 
-    /**************************5-文件管理相关************************/
+    /**************************-文件管理相关************************/
     /***.　1上传单一文件***/
     public BmobFile fileUpload(String picPath){
         //String picPath = "sdcard/temp.jpg";

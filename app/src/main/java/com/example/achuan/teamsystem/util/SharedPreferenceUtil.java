@@ -42,6 +42,15 @@ public class SharedPreferenceUtil {
         getAppSp().edit().putString(Constant.KEY_USERNAME, username).commit();
     }
 
+    //4-当前用户的权限(是否为管理员)
+    public static boolean getAdmin(){
+        return getAppSp().getBoolean(Constant.ADMIN_RIGHT,false);
+    }
+
+    public static void setAdmin(boolean isAdmin){
+        getAppSp().edit().putBoolean(Constant.ADMIN_RIGHT,isAdmin).commit();
+    }
+
 
 
 

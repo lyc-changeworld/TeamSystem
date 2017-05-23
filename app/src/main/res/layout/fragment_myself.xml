@@ -210,4 +210,17 @@
             android:ellipsize="end"
             android:maxLength="120"/>
     </RelativeLayout>
+
+    <!--退出登录按钮-->
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"
+        android:textColor="#ffffff"
+        android:textSize="17dp"
+        android:text="@string/logout"
+        android:background="@drawable/btn_logout_selector"/>
 </LinearLayout>

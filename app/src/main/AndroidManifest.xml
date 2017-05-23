@@ -69,20 +69,30 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <!--应用启动时的界面-->
-        <activity android:name=".ui.main.activity.SplashActivity">
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <!--登录界面-->
-        <activity android:name=".ui.main.activity.LoginActivity"></activity>
+        <activity android:name=".ui.LoginActivity"></activity>
         <!--注册界面-->
-        <activity android:name=".ui.main.activity.RegisterActivity"></activity>
-        <!--主界面-->
-        <activity android:name=".ui.main.activity.MainActivity"></activity>
+        <activity android:name=".ui.user.main.activity.RegisterActivity"></activity>
+
+        <!--用户主界面-->
+        <activity android:name=".ui.user.main.activity.UserMainActivity"></activity>
         <!--签到界面-->
-        <activity android:name=".ui.signin.activity.SigninDetailActivity"></activity>
+        <activity android:name=".ui.user.signin.activity.SigninDetailActivity"></activity>
+
+        <!--管理员主界面-->
+        <activity android:name=".ui.admin.main.activity.AdminMainActivity"></activity>
+        <!--BLE设备扫描列表界面-->
+        <activity android:name=".ui.admin.ble.activity.DeviceScanActivity"></activity>
+        <!--BLE设备连接界面-->
+        <activity android:name=".ui.admin.ble.activity.DeviceActivity"></activity>
+
+
 
         <!--注册service-->
         <service android:name=".service.BleService"></service>

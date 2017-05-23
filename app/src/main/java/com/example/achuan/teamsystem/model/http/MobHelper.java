@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.achuan.teamsystem.app.Constant;
-import com.example.achuan.teamsystem.ui.main.activity.RegisterActivity;
+import com.example.achuan.teamsystem.ui.user.main.activity.RegisterActivity;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package com.example.achuan.teamsystem.ui.signin.activity;
+package com.example.achuan.teamsystem.ui.user.signin.activity;
 
 
 import android.bluetooth.BluetoothAdapter;
@@ -86,10 +86,8 @@ public class SigninDetailActivity extends MvpActivity<SigninDetailPresenter> imp
         Sno=myUser.getSno();
         //设置标题栏内容
         setToolBar(mToolbar, title,true);
-
         //判断该课程今天是否已经签到过了
         mPresenter.checkSignInRecord(Sno,Cno);
-
     }
 
     /*扫描设备的方法*/
@@ -106,23 +104,27 @@ public class SigninDetailActivity extends MvpActivity<SigninDetailPresenter> imp
                         DialogUtil.closeProgressDialog();
                     }
 
-                    //单次扫描结束,进行结果检测
-                    for (int i = 0; i < mScanDevices_before.size(); i++) {
-                        BleDevice device=mScanDevices_before.get(i);
-                        //LogUtil.d(TAG,device.GetDevice().getAddress()+":"+device.getDistance());
-                        //如果发现可以签到的设备
-                        if(device.GetDevice().getAddress().equals(Constant.TARGET_BLE_MAC)){
-                            //如果在允许范围内
-                            if(device.getDistance()<Constant.DISTANCE){
-                                //将签到记录存储到后台服务器
-                                mPresenter.signinDeal(Sno,Cno);
+                    if(mScanDevices_before.size()>0){
+                        //单次扫描结束,进行结果检测
+                        for (int i = 0; i < mScanDevices_before.size(); i++) {
+                            BleDevice device=mScanDevices_before.get(i);
+                            //LogUtil.d(TAG,device.GetDevice().getAddress()+":"+device.getDistance());
+                            //如果发现可以签到的设备
+                            if(device.GetDevice().getAddress().equals(Constant.TARGET_BLE_MAC)){
+                                //如果在允许范围内
+                                if(device.getDistance()<Constant.DISTANCE){
+                                    //将签到记录存储到后台服务器
+                                    mPresenter.signinDeal(Sno,Cno);
+                                }
+                                else {
+                                    SnackbarUtil.showShort(mBtSignin,"发现可用设备,但未在允许范围内");
+                                }
+                            }else {
+                                SnackbarUtil.showShort(mBtSignin,"未发现可用设备ヽ(≧Д≦)ノ");
                             }
-                            else {
-                                SnackbarUtil.showShort(mBtSignin,"发现可用设备,但未在允许范围内");
-                            }
-                        }else {
-                            SnackbarUtil.showShort(mBtSignin,"未发现可用设备ヽ(≧Д≦)ノ");
                         }
+                    }else {
+                        SnackbarUtil.showShort(mBtSignin,"未发现任何设备ヽ(≧Д≦)ノ");
                     }
                 }
             }, SCAN_PERIOD);

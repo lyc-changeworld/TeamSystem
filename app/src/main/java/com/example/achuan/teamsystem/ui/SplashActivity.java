@@ -1,7 +1,11 @@
-package com.example.achuan.teamsystem.ui.main.activity;
+package com.example.achuan.teamsystem.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -9,6 +13,8 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.base.SimpleActivity;
+import com.example.achuan.teamsystem.ui.admin.main.activity.AdminMainActivity;
+import com.example.achuan.teamsystem.ui.user.main.activity.UserMainActivity;
 import com.example.achuan.teamsystem.util.SharedPreferenceUtil;
 import com.hyphenate.chat.EMClient;
 
@@ -26,6 +32,7 @@ import butterknife.ButterKnife;
 public class SplashActivity extends SimpleActivity {
 
     private static final int sleepTime = 2000;
+    public static final int PERMISSIONS_REQUEST_FINE_LOCATION = 1;//申请权限的请求码
 
     @BindView(R.id.splash_root)
     RelativeLayout mSplashRoot;
@@ -39,6 +46,8 @@ public class SplashActivity extends SimpleActivity {
 
     @Override
     protected void initEventAndData() {
+        /*运行时申请权限*/
+        requestPermission();
         //通过Glide来加载图片,避免图片过大造成的异常加载
         Glide.with(this).//传入上下文(Context|Activity|Fragment)
                 load(R.drawable.em_splash).//加载图片,传入(URL地址｜资源id｜本地路径)
@@ -75,11 +84,7 @@ public class SplashActivity extends SimpleActivity {
                     //LitePal.useDefault();
                     //删除数据库文件
                     //LitePal.deleteDatabase("xxx");
-
-                    /*1-Bmob初始化加载*/
-
-
-                    /*2-环信初始化加载*/
+                    /*环信初始化加载*/
                     EMClient.getInstance().groupManager().loadAllGroups();
                     EMClient.getInstance().chatManager().loadAllConversations();
                     long costTime = System.currentTimeMillis() - start;//计算加载耗费的时间
@@ -91,8 +96,14 @@ public class SplashActivity extends SimpleActivity {
                             e.printStackTrace();
                         }
                     }
-                    //进入主页面
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    //进行身份识别
+                    if(SharedPreferenceUtil.getAdmin()){
+                        //说明该账户为管理员
+                        startActivity(new Intent(SplashActivity.this, AdminMainActivity.class));
+                    }else {
+                        //说明该账户为普通用户
+                        startActivity(new Intent(SplashActivity.this, UserMainActivity.class));
+                    }
                     finish();
                 } else {
                     try {
@@ -105,6 +116,36 @@ public class SplashActivity extends SimpleActivity {
                 }
             }
         }).start();
+    }
+
+    /*用户对申请权限进行操作后的回调方法*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_FINE_LOCATION:
+                //授权结果通过
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    //授予了该权限
+                } else {
+                    //拒绝授予该权限
+                }
+            default:break;
+        }
+    }
+
+    /**
+     * 1-运行时申请权限
+     */
+    private void requestPermission() {
+        if (ActivityCompat.checkSelfPermission(this, //Context
+                Manifest.permission.ACCESS_FINE_LOCATION)//具体的权限名
+                != PackageManager.PERMISSION_GRANTED) {//用来比较权限
+            // No explanation needed　申请权限.
+            ActivityCompat.requestPermissions(this,//Activity实例
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},//数组,存放权限名
+                    PERMISSIONS_REQUEST_FINE_LOCATION);//请求码
+        }
     }
 
     @Override

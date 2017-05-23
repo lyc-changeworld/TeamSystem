@@ -1,24 +1,31 @@
-package com.example.achuan.teamsystem.ui.myself.fragment;
+package com.example.achuan.teamsystem.ui.user.myself.fragment;
 
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.app.Constant;
 import com.example.achuan.teamsystem.base.MvpFragment;
 import com.example.achuan.teamsystem.model.bean.MyUser;
+import com.example.achuan.teamsystem.model.http.BmobHelper;
+import com.example.achuan.teamsystem.model.http.EaseMobHelper;
 import com.example.achuan.teamsystem.presenter.MySelfPresenter;
 import com.example.achuan.teamsystem.presenter.contract.MySelfContract;
+import com.example.achuan.teamsystem.ui.LoginActivity;
 import com.example.achuan.teamsystem.util.DialogUtil;
 import com.example.achuan.teamsystem.util.SnackbarUtil;
+import com.hyphenate.EMCallBack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +70,8 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
     @BindView(R.id.rt_signature)
     RelativeLayout mRtSignature;
     Unbinder unbinder;
+    @BindView(R.id.btn_logout)
+    Button mBtnLogout;
 
 
     private Context mContext;
@@ -81,9 +90,9 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
 
     @Override
     protected void initEventAndData() {
-        mContext=getActivity();
+        mContext = getActivity();
         //1-获取本地缓存用户
-        mMyUser=BmobUser.getCurrentUser(MyUser.class);
+        mMyUser = BmobUser.getCurrentUser(MyUser.class);
         /*2-初始化显示用户信息(先去网络端加载,如果不成功再去本地加载缓存的用户信息)*/
         mPresenter.getUserObject(mMyUser.getUsername());
     }
@@ -121,9 +130,12 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
         //showHeadIcon();
     }
 
-    @OnClick({R.id.rt_headIcon, R.id.rt_nickName, R.id.rt_sex, R.id.rt_age, R.id.rt_sno, R.id.rt_email, R.id.rt_signature})
+    @OnClick({R.id.rt_headIcon, R.id.rt_nickName, R.id.rt_sex, R.id.rt_age,
+            R.id.rt_sno, R.id.rt_email, R.id.rt_signature,R.id.btn_logout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_logout:
+                logoutDeal();
             case R.id.rt_headIcon:
                 break;
             case R.id.rt_nickName:
@@ -139,6 +151,7 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
                                     mMyUser.setNickName(input);
                                 }
                             }
+
                             @Override
                             public void onLeftButtonClick() {
                             }
@@ -200,6 +213,7 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
                                     SnackbarUtil.showShort(mRtSignature, "你还未出生,请重新选择-=͟͟͞͞( °∀° )☛");
                                 }
                             }
+
                             @Override
                             public void onLeftButtonClick() {
                             }
@@ -220,6 +234,7 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
                                     mMyUser.setSno(input);
                                 }
                             }
+
                             @Override
                             public void onLeftButtonClick() {
                             }
@@ -240,6 +255,7 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
                                     mMyUser.setEmail(input);
                                 }
                             }
+
                             @Override
                             public void onLeftButtonClick() {
                             }
@@ -265,18 +281,80 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
                             }
                         });
                 break;
-            default:break;
+            default:
+                break;
         }
+    }
+    //退出登录处理
+    private void logoutDeal() {
+        //弹出对话框确认是否退出
+        DialogUtil.createOrdinaryDialog(mContext,
+                getString(R.string.Whether_or_not_to_logout),//标题
+                getString(R.string.Logout_alert),//内容
+                getString(R.string.logout), //右边按钮内容
+                getString(R.string.cancel), //左边按钮内容
+                true, new DialogUtil.OnAlertDialogButtonClickListener() {
+                    //点击退出按钮
+                    @Override
+                    public void onRightButtonClick() {
+                        //创建进度加载对话框
+                        DialogUtil.createProgressDialog(mContext,"",
+                                getString(R.string.Are_logged_out),
+                                false,false);//对话框无法被取消
+                        /*-1-首先退出环信登录--*/
+                        EaseMobHelper.getInstance().logout(false,new EMCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                //2-接着退出Bmob登录
+                                BmobHelper.getInstance().userLogOut();//清除缓存用户对象
+                                getActivity().runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        if(!getActivity().isFinishing()&&DialogUtil.isProgressDialogShowing()){
+                                            DialogUtil.closeProgressDialog();
+                                        }
+                                        //后期可以设置是否退出后清空当前用户的缓存数据,即删除数据库文件
+                                        //结束主界面并跳转到登录页面
+                                        startActivity(new Intent(mContext, LoginActivity.class));
+                                        getActivity().finish();
+                                    }
+                                });
+                            }
+                            @Override
+                            public void onProgress(int progress, String status) {
+                            }
+                            @Override
+                            public void onError(int code, String message) {
+                                //需要在主线程中进行UI更新
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // TODO Auto-generated method stub
+                                        if(DialogUtil.isProgressDialogShowing()){
+                                            DialogUtil.closeProgressDialog();
+                                        }
+                                        Toast.makeText(mContext,
+                                                "退出登录失败...",
+                                                Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    @Override
+                    public void onLeftButtonClick() {
+                    }
+                });
     }
 
     @Override
     public void showLoading(String message) {
-        DialogUtil.createProgressDialog(mContext,"", message,true,false);
+        DialogUtil.createProgressDialog(mContext, "", message, true, false);
     }
 
     @Override
     public void hideLoading() {
-        if(DialogUtil.isProgressDialogShowing()){
+        if (DialogUtil.isProgressDialogShowing()) {
             DialogUtil.closeProgressDialog();
         }
     }
