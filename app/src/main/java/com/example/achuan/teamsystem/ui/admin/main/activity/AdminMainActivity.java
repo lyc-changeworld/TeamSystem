@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import com.example.achuan.teamsystem.R;
 import com.example.achuan.teamsystem.app.Constant;
 import com.example.achuan.teamsystem.base.SimpleActivity;
+import com.example.achuan.teamsystem.ui.admin.contact.fragment.ContactsMainFragment;
+import com.example.achuan.teamsystem.ui.admin.conversation.fragment.ConversationMainFragment;
 import com.example.achuan.teamsystem.ui.user.myself.fragment.MySelfFragment;
 import com.example.achuan.teamsystem.ui.user.signin.fragment.SigninFragment;
 import com.example.achuan.teamsystem.util.SharedPreferenceUtil;
@@ -31,12 +33,14 @@ public class AdminMainActivity extends SimpleActivity implements BottomNavigatio
 
     //需要装载到主活动中的Fragment的引用变量
     SigninFragment mSigninFragment;
+    ConversationMainFragment mConversationMainFragment;
+    ContactsMainFragment mContactsMainFragment;
     MySelfFragment mMySelfFragment;
 
 
     //定义变量记录需要隐藏和显示的fragment的编号
-    private int hideFragment = Constant.TYPE_NEWS;
-    private int showFragment = Constant.TYPE_NEWS;
+    private int hideFragment = Constant.TYPE_SIGNIN;
+    private int showFragment = Constant.TYPE_SIGNIN;
 
     //记录左侧navigation的item点击
     MenuItem mLastMenuItem;//历史
@@ -134,28 +138,28 @@ public class AdminMainActivity extends SimpleActivity implements BottomNavigatio
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btm_0:
-                showFragment = Constant.TYPE_NEWS;
+                showFragment = Constant.TYPE_SIGNIN;
                 //第一次加载显示时,才创建碎片对象,并添加到内容容器中
                 /*if (mNewsMainFragment == null) {
                     mNewsMainFragment = new ConversationMainFragment();
                     addFragment(contentViewId, mNewsMainFragment);
                 }*/
                 break;
-            /*case R.id.bottom_1:
-                showFragment = Constants.TYPE_CONTACTS;
+            case R.id.btm_1:
+                showFragment = Constant.TYPE_NEWS;
+                if (mConversationMainFragment == null) {
+                    mConversationMainFragment = new ConversationMainFragment();
+                    addFragment(contentViewId, mConversationMainFragment);
+                }
+                break;
+            case R.id.btm_2:
+                showFragment = Constant.TYPE_CONTACTS;
                 if (mContactsMainFragment == null) {
                     mContactsMainFragment = new ContactsMainFragment();
                     addFragment(contentViewId, mContactsMainFragment);
                 }
                 break;
-            case R.id.bottom_2:
-                showFragment = Constants.TYPE_EXPLORE;
-                if (mExploreMainFragment == null) {
-                    mExploreMainFragment = new ExploreMainFragment();
-                    addFragment(contentViewId, mExploreMainFragment);
-                }
-                break;*/
-            case R.id.btm_2:
+            case R.id.btm_3:
                 showFragment = Constant.TYPE_MYSELF;
                 if (mMySelfFragment == null) {
                     mMySelfFragment = new MySelfFragment();
@@ -184,17 +188,33 @@ public class AdminMainActivity extends SimpleActivity implements BottomNavigatio
     //根据item编号获取fragment对象的方法
     private Fragment getTargetFragment(int item) {
         switch (item) {
-            case Constant.TYPE_NEWS:
+            case Constant.TYPE_SIGNIN:
                 return mSigninFragment;
-            /*case Constant.TYPE_CONTACTS:
+            case Constant.TYPE_NEWS:
+                return mConversationMainFragment;
+            case Constant.TYPE_CONTACTS:
                 return mContactsMainFragment;
-            case Constant.TYPE_EXPLORE:
-                return mExploreMainFragment;*/
             case Constant.TYPE_MYSELF:
                 return mMySelfFragment;
             default:break;
         }
         return mSigninFragment;
+    }
+
+    /*用户对申请权限进行操作后的回调方法*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_FINE_LOCATION:
+                //授权结果通过
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    //授予了该权限
+                } else {
+                    //拒绝授予该权限
+                }
+            default:break;
+        }
     }
 
     /**

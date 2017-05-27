@@ -13,9 +13,9 @@
     <string name="cancel">取消</string>
 
     <!--2-BottomNavMenu中的菜单项的标题-->
-    <string name="bottom_title_0">课程</string>
-    <string name="bottom_title_1">通讯</string>
-    <string name="bottom_title_2">发现</string>
+    <string name="bottom_title_0">考勤</string>
+    <string name="bottom_title_1">消息</string>
+    <string name="bottom_title_2">通讯录</string>
     <string name="bottom_title_3">我的</string>
 
     <!--3-主界面toolbar中的菜单项-->
@@ -107,6 +107,11 @@
     <string name="text_delivered_msg">送达</string>
 
     <!--8-群聊相关-->
+    <!--群聊申请-->
+    <string name="Request_to_join">请求加入</string>
+    <string name="send_the_request_is">发送请求成功，等待群主同意</string>
+    <string name="Join_the_group_chat">加入群聊成功</string>
+    <string name="Failed_to_join_the_group_chat">加入群聊失败:</string>
     <!--群组列表界面-->
     <string name="Failed_to_get_group_chat_information">获取群聊信息失败...</string>
     <!--新建群组-->

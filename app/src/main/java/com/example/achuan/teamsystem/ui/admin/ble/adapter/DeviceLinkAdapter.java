@@ -85,7 +85,7 @@ public class DeviceLinkAdapter extends RecyclerView.Adapter<DeviceLinkAdapter.Vi
         * 这里结合下面自定义的viewHolder类,拿到控件的加载对象然后进行数据绑定
         * 这一步比较重要,需要小心设置
         * */
-        holder.mSquareIv.setBackgroundResource(R.mipmap.ic_launcher);
+        holder.mSquareIv.setBackgroundResource(R.drawable.signin);
         holder.mTvTitle.setText(myBean.getTitle());
         holder.mTvContent.setText(myBean.getContent());
         /***为item设置点击监听事件***/

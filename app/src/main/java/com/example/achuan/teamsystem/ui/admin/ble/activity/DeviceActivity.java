@@ -14,11 +14,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.achuan.teamsystem.R;
@@ -41,7 +39,6 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by achuan on 17-4-10.
@@ -56,8 +53,8 @@ public class DeviceActivity extends MvpActivity<CardSigninPresenter> implements 
     Toolbar mToolbar;
     @BindView(R.id.rv)
     RecyclerView mRv;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
+    /*@BindView(R.id.fab)
+    FloatingActionButton mFab;*/
 
     //设置广播监听
     private BluetoothReceiver bluetoothReceiver = null;
@@ -82,8 +79,9 @@ public class DeviceActivity extends MvpActivity<CardSigninPresenter> implements 
     private String title, Cno, Sno=null;
     Context mContext;
 
-    String mCnum= "1001";
-    byte[] mCbyte= mCnum.getBytes();
+    /*String mCnum= "1001";
+    byte[] mCbyte= mCnum.getBytes();*/
+
 
     @Override
     protected int getLayout() {
@@ -167,7 +165,7 @@ public class DeviceActivity extends MvpActivity<CardSigninPresenter> implements 
         registerReceiver(bluetoothReceiver, intentFilter);
     }
 
-    /*按钮测试数据*/
+    /*按钮测试数据*//*
     @OnClick({R.id.fab})
     public void onViewClicked(View view) {
         switch (view.getId()){
@@ -181,7 +179,7 @@ public class DeviceActivity extends MvpActivity<CardSigninPresenter> implements 
                 break;
             default:break;
         }
-    }
+    }*/
 
     /*自定义的蓝牙广播监听器类*/
     private class BluetoothReceiver extends BroadcastReceiver {

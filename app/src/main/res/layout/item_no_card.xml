@@ -7,9 +7,10 @@
         android:id="@+id/square_iv"
         android:scaleType="centerCrop"
         android:transitionName="shareView"
-        android:layout_width="70dp"
+        android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:padding="10dp"/>
+        android:layout_margin="10dp"
+        android:layout_gravity="center"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"

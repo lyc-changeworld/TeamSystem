@@ -17,8 +17,10 @@
         </list>
     -->
     <list>
-        <mapping class="com.example.achuan.teammanagement.model.db.ContactUser" />
-        <mapping class="com.example.achuan.teammanagement.model.db.InviteMessage" />
+        <mapping class="com.example.achuan.teamsystem.model.db.ContactUser" />//联系人
+        <mapping class="com.example.achuan.teamsystem.model.db.InviteMessage"/>//邀请消息
+        <mapping class="com.example.achuan.teamsystem.model.bean.Course"/>//课程
+        <mapping class="com.example.achuan.teamsystem.model.bean.Card"></mapping>//卡号和学号对应表
     </list>
 
     <!--

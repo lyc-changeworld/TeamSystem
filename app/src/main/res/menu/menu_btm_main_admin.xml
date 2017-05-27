@@ -7,23 +7,30 @@
     　　　never:永远显示在菜单当中-->
     <item
         android:id="@+id/btm_0"
-        android:icon="@drawable/ic_person_grey_600_24dp"
+        android:icon="@drawable/ic_bluetooth_grey_600_24dp"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:title="蓝牙">
+        android:title="@string/bottom_title_0">
     </item>
     <item
         android:id="@+id/btm_1"
-        android:icon="@drawable/ic_person_grey_600_24dp"
+        android:icon="@drawable/ic_chat_bubble_grey_600_24dp"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:title="后台">
+        android:title="@string/bottom_title_1">
     </item>
     <item
         android:id="@+id/btm_2"
+        android:icon="@drawable/ic_contacts_grey_600_24dp"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="@string/bottom_title_2">
+    </item>
+    <item
+        android:id="@+id/btm_3"
         android:icon="@drawable/ic_person_grey_600_24dp"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:title="我的">
+        android:title="@string/bottom_title_3">
     </item>
 </menu>

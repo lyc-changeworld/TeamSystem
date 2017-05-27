@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:divider="@drawable/di_item"
+              android:showDividers="middle"
+              android:background="@color/colorBackground">
+
+    <TextView
+        android:id="@+id/tv_one"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="16sp"
+        android:text="男"/>
+    <TextView
+        android:id="@+id/tv_two"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="16sp"
+        android:text="女"/>
+    <!--给条目中间添加间距-->
+    <android.support.v4.widget.Space
+        android:id="@+id/space_null"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+    <TextView
+        android:id="@+id/tv_choose_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="16sp"
+        android:text="取消"/>
+</LinearLayout>

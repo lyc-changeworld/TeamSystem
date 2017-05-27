@@ -187,6 +187,56 @@ public class SigninFragment extends MvpFragment<SigninCoursePresenter> implement
         if (!getActivity().isFinishing() && DialogUtil.isProgressDialogShowing()) {
             DialogUtil.closeProgressDialog();
         }
+
+        /*if(EMClient.getInstance().groupManager().getAllGroups().size()==0){
+            for (int i = 0; i <mList.size() ; i++) {
+                Course course=mList.get(i);
+                final String groupName=course.getCname();
+                final String desc="开始神奇的“"+groupName+"”课程学习吧！";
+                final EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
+                option.maxUsers=200;//设置群组最大用户数(默认200)
+                option.style=EMGroupStylePublicOpenJoin;
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EaseMobHelper.getInstance().createGroup(groupName, desc,new String[10], new String(""), option, new EMCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                //回到主线程进行UI更新
+                                getActivity().runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        if(DialogUtil.isProgressDialogShowing()){
+                                            DialogUtil.closeProgressDialog();
+                                        }
+                                    }
+                                });
+                            }
+                            @Override
+                            public void onError(int code, final String error) {
+                                //回到主线程进行UI更新
+                                getActivity().runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        if(DialogUtil.isProgressDialogShowing()){
+                                            DialogUtil.closeProgressDialog();
+                                        }
+                                        //对异常进行提示
+                                        Toast.makeText(mContext,
+                                                getString(R.string.Failed_to_create_groups)+
+                                                        error,
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                            @Override
+                            public void onProgress(int progress, String status) {
+
+                            }
+                        });
+                    }
+                }).start();
+            }
+        }*/
     }
 
     /*//根据关键字进行数据查询

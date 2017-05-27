@@ -5,6 +5,10 @@
     <!--添加toolbar-->
     <include layout="@layout/include_toolbar"
         android:id="@+id/toolbar"></include>
+
+
+
+    <!--签到按钮-->
     <Button
         android:id="@+id/bt_signin"
         android:layout_width="100dp"

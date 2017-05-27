@@ -159,10 +159,10 @@ public class MySelfFragment extends MvpFragment<MySelfContract.Presenter> implem
                 break;
             case R.id.rt_sex:
                 final Dialog dialog2 = DialogUtil.createMyselfDialog(mContext,
-                        R.layout.dlg_two, Gravity.BOTTOM);
+                        R.layout.dlg_three, Gravity.BOTTOM);
                 //初始化布局控件
-                TextView chooseMan = (TextView) dialog2.findViewById(R.id.tv_choose_man);
-                TextView chooseWoman = (TextView) dialog2.findViewById(R.id.tv_choose_woman);
+                TextView chooseMan = (TextView) dialog2.findViewById(R.id.tv_one);
+                TextView chooseWoman = (TextView) dialog2.findViewById(R.id.tv_two);
                 TextView chooseCancel = (TextView) dialog2.findViewById(R.id.tv_choose_cancel);
                 chooseMan.setOnClickListener(new View.OnClickListener() {
                     @Override

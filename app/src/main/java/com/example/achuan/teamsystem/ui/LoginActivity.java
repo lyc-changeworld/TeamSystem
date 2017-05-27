@@ -193,7 +193,7 @@ public class LoginActivity extends SimpleActivity {
                                                                 EMClient.getInstance().groupManager().loadAllGroups();
                                                                 EMClient.getInstance().chatManager().loadAllConversations();
                                                                 //加载好友信息并存储到本地
-                                                                //getFriends();
+                                                                getFriends();
                                                                 /***---切换数据库文件到当前对应的用户---***/
                                                                 /*创建一个名为xxx的数据库,而它的所有配置都会直接使用litepal.xml文件中配置的内容*/
                                                                 LitePalDB litePalDB= LitePalDB.fromDefault(userName+"_TEAM");

@@ -91,7 +91,22 @@
         <activity android:name=".ui.admin.ble.activity.DeviceScanActivity"></activity>
         <!--BLE设备连接界面-->
         <activity android:name=".ui.admin.ble.activity.DeviceActivity"></activity>
+        
+        <!--环信通讯相关-->
+        <!--聊天界面-->
+        <activity android:name=".ui.admin.conversation.activity.MyChatActivity"></activity>
+        <!--群聊界面-->
+        <activity android:name=".ui.admin.contact.activity.GroupsActivity"></activity>
+        <!--创建群聊的界面-->
+        <activity android:name=".ui.admin.contact.activity.NewGroupActivity"></activity>
+        <!--加人入群界面-->
+        <activity android:name=".ui.admin.contact.activity.GroupPickContactsActivity"></activity>
+        <!--公开群列表界面-->
+        <activity android:name=".ui.admin.contact.activity.PublicGroupsActivity"></activity>
+        <!--公开群单个的简单信息介绍界面-->
+        <activity android:name=".ui.admin.contact.activity.GroupDetailsActivity"></activity>
 
+        
 
 
         <!--注册service-->

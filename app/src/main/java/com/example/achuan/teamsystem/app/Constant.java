@@ -8,9 +8,9 @@ package com.example.achuan.teamsystem.app;
 public class Constant {
 
     //=================MODULE TYPE CODE====================
-    public static final int TYPE_NEWS=100;
-    public static final int TYPE_CONTACTS=200;
-    public static final int TYPE_EXPLORE=300;
+    public static final int TYPE_SIGNIN=100;
+    public static final int TYPE_NEWS=200;
+    public static final int TYPE_CONTACTS=300;
     public static final int TYPE_MYSELF=400;
     /*MAIN TYPE CODE*/
     public static final int TYPE_SETTINGS=101;
